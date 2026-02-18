@@ -20,59 +20,17 @@ export interface FetchNotesResponse {
 }
 
 const API_BASE_URL = 'https://notehub-public.goit.study/api';
-
-let accessToken: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJwb2x1Ym90a2E4NjVAZ21haWwuY29tIiwiaWF0IjoxNzcxNDI2OTg2fQ.pqLH1Gh1MSV0x1FwjUNxmL9mdZIOv2AgIdZdiaUj7oc';
-
-/**
- * Auth token response
- */
-export interface AuthResponse {
-  token: string;
-}
-
-/**
- * Set the authorization token for requests
- */
-const setAuthToken = (token: string) => {
-  accessToken = token;
-};
-
-/**
- * Get or create access token
- */
-const getAccessToken = async (): Promise<string> => {
-  if (accessToken) {
-    return accessToken;
-  }
-
-  // Avoid multiple simultaneous auth requests
-  // This block won't be reached since we have a default token
-  if (false) {
-    return '';
-  }
-
-  return accessToken;
-};
+const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJwb2x1Ym90a2E4NjVAZ21haWwuY29tIiwiaWF0IjoxNzcxNDI2OTg2fQ.pqLH1Gh1MSV0x1FwjUNxmL9mdZIOv2AgIdZdiaUj7oc';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Add request interceptor to ensure token is set before each request
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    try {
-      const token = await getAccessToken();
-      config.headers.Authorization = `Bearer ${token}`;
-    } catch (error) {
-      console.error('Failed to set auth token:', error);
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// Add request interceptor to set authorization token
+axiosInstance.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
+  return config;
+});
 
 /**
  * Fetch notes with optional pagination and search filtering
