@@ -32,6 +32,8 @@ function App() {
     },
     [debouncedHandleSearch]
   );
+  //zX//
+
 
   const { data: notesData, isError, error } = useQuery({
     queryKey: ['notes', page, debouncedSearch],
